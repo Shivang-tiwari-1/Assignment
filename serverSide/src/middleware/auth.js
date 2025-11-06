@@ -12,7 +12,6 @@ const authentication = async (req, res, next) => {
       : null;
 
     const { accessToken } = req.cookies;
-    console.log(accessToken, "->", tokenFromHeader);
     if (!accessToken) {
       return res.status(401).json({ message: "no token " });
     }

@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const { generateAccessToken } = require("../utils/generateTokens");
+const jwt = require("jsonwebtoken");
 
 exports.createUser = async (req, res) => {
   try {
@@ -94,5 +95,112 @@ exports.login = async (req, res) => {
       );
   } catch (error) {
     throw new Error(`error occurred:${error}`);
+  }
+};
+
+exports.refreshAcessToken = async (req, res) => {
+  try {
+    console.log("|");
+    console.log("refreshtoken starts");
+
+    console.log("---->", req.cookies.refreshToken);
+    const refreshAccessToken = await req.cookies.refreshToken;
+    if (!refreshAccessToken) {
+      return res.status(401).json({ message: "you need to be logged in" });
+    }
+    console.log(refreshAccessToken);
+    let decodedToken;
+    try {
+      decodedToken = await jwt.verify(
+        refreshAccessToken,
+        process.env.REFRESH_TOKEN_SECRET
+      );
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: "verification failed", message: err.message });
+    }
+
+    const user = await User.findById(decodedToken?.id);
+    if (!user) {
+      console.log("test3->failed");
+      return res.status(500).json({ error: "user not found" });
+    } else {
+      console.log("test3->passed");
+    }
+
+    if (refreshAccessToken !== user?.refreshToken) {
+      console.log("test4->failed");
+      return res
+        .status(500)
+        .json({ error: "incoming refresh token is not matching" });
+    } else {
+      console.log("test4->passed");
+    }
+
+    const { accessToken, refreshToken } = await generateAccessToken(user.id);
+    console.log(accessToken, refreshToken);
+    if (refreshToken && accessToken) {
+      console.log("ssss");
+      return res
+        .status(200)
+        .cookie("accessToken", accessToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "None",
+        })
+        .cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "None",
+        })
+        .json({ accessToken, refreshToken }, "Token refreshed successfully");
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error,
+    };
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    console.log(req.user);
+    const user = req.user;
+    if (!user) {
+      console.log("test1->failed");
+      return res.status(500).json({ error: "user not found" });
+    } else {
+      console.log("test1->success");
+    }
+
+    const userExsist = await User.findByIdAndUpdate(
+      user.id,
+      { $unset: { refreshToken: 1 } },
+      { new: true }
+    );
+    if (!userExsist) {
+      console.log("test2->failed");
+      return res.status(500).json({ message: "user does not exist" });
+    } else {
+      console.log("test2->success");
+    }
+
+    return res
+      .status(200)
+      .clearCookie("accessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      })
+      .clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      })
+      .json(({}, "User logged out Successfully"));
+  } catch (error) {
+    throw new Error(`error occurred:${error.message}`);
   }
 };

@@ -5,48 +5,21 @@ const User = require("../models/user");
 
 exports.addToCart = async (req, res) => {
   try {
-    const { productid } = req.query;
-    const { quantity } = req.body;
-    if (
-      !productid ||
-      productid === undefined ||
-      !quantity ||
-      quantity === undefined
-    ) {
+    const { quantity, category, price } = req.body;
+    if (!quantity || quantity === undefined) {
       return res.status(400).json({
         success: false,
         message: "required param or data not available",
       });
     }
 
-    const findproduct = await Product.findById(productid);
-    if (findproduct === undefined || findproduct === null || !findproduct) {
-      return res.status(400).json({
-        success: false,
-        message: "product does not exists",
-      });
-    }
-    console.log(findproduct.price, req.body.quantity);
-    const addToCart = await Cart.findOneAndUpdate(
-      {
-        userId: req.user.id,
-        name: findproduct.name,
-      },
-      {
-        $set: {
-          name: findproduct.name,
-          price: findproduct.price,
-        },
-        $inc: {
-          qty: req.body.quantity,
-          sum: Number(findproduct.price) * req.body.quantity,
-        },
-      },
-      {
-        new: true, // return updated document
-        upsert: true,
-      }
-    );
+    const addToCart = await Cart.create({
+      userId: req.user.id,
+      qty: quantity,
+      name: category,
+      price: price,
+      sum: quantity * price,
+    });
 
     if (addToCart) {
       return res.status(200).json({ data: addToCart });

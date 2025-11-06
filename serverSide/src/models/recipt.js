@@ -6,12 +6,10 @@ const ReciptSchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     phone: {
       type: String,
       required: true,
-      unique: true,
     },
     total: {
       type: String,
