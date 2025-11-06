@@ -31,14 +31,20 @@ GET /products → List all products
 
 Cart
 POST /cart → Add item to cart (requires JWT)
+
 DELETE /delcart/:id → Remove item from cart (requires JWT)
+
 GET /cart/getcart → Retrieve all items in cart (requires JWT)
+
 POST /cart/checkout → Perform mock checkout (requires JWT)
 
 Authentication
 POST /createuser → Create a new user (signup)
+
 POST /login → Login user and get JWT token
+
 POST /refreshToken → Get a new access token using refresh token
+
 POST /logout → Logout user (invalidate refresh token, requires JWT)
 
 Notes
