@@ -25,7 +25,6 @@ const Navbar = () => {
             AssignMent
           </Link>
 
-
           <div className="hidden md:flex md:items-center md:space-x-2">
             {auth.accessToken ? (
               <>
@@ -117,22 +116,25 @@ const Navbar = () => {
 
           {auth.accessToken ? (
             <>
-              <button className="block w-full text-left bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md">
+              <button
+                className="block w-full text-left bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md"
+                onClick={handleLogout}
+              >
                 Logout
               </button>
               <Link
                 className="block px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
-                to="/getData"
+                to="/cart"
                 onClick={() => setIsOpen(false)}
               >
-                Account
+                Cart
               </Link>
               <Link
                 className="block px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
-                to="/shownotes"
+                to="/home"
                 onClick={() => setIsOpen(false)}
               >
-                Saved Notes
+                Home
               </Link>
             </>
           ) : (

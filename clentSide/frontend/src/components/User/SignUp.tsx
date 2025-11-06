@@ -54,9 +54,9 @@ const SignUp = () => {
               Phone
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
+              type="phone"
+              id="phone"
+              name="phone"
               value={credentials.phone}
               onChange={handleChange}
               required

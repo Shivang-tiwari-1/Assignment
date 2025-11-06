@@ -1,9 +1,12 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../../context/User/UserContext";
 
 const Cart = () => {
-  const { getCart, reload, cart, deleteCartItem, checkoutCart } =
+  const { getCart, reload, cart, deleteCartItem, checkoutCart, receipt } =
     useContext(UserContext);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -16,27 +19,37 @@ const Cart = () => {
     fetchCart();
   }, [reload]);
 
-  const totalPrice =
-    cart && cart.length > 0
-      ? cart.reduce(
-          (acc, item) => acc + Number(item.price) * Number(item.qty),
-          0
-        )
-      : 0;
+  useEffect(() => {
+    const total =
+      cart && cart.length > 0
+        ? cart.reduce(
+            (acc, item) => acc + Number(item.price) * Number(item.qty),
+            0
+          )
+        : 0;
+    setTotalPrice(total);
+  }, [cart]);
+
+  const handleDelete = async (id: string) => {
+    console.log(id);
+    await deleteCartItem(id);
+    await getCart();
+  };
 
   const handleCheckout = async () => {
-    await checkoutCart(cart);
     if (!cart || cart.length === 0) {
       alert("Your cart is empty");
       return;
     }
-    alert(`Checkout successful! Total amount: $${totalPrice.toFixed(2)}`);
+
+    // Call checkout API
+    await checkoutCart(cart);
+
+    // Open receipt modal
+    setIsModalOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    await deleteCartItem(id);
-    await getCart(); 
-  };
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -85,6 +98,40 @@ const Cart = () => {
           >
             Checkout
           </button>
+        </div>
+      )}
+
+      {/* Receipt Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-4">Receipt</h2>
+
+            <p className="mb-2">
+              <strong>Name:</strong> {receipt?.name || "N/A"}
+            </p>
+            <p className="mb-2">
+              <strong>Phone:</strong> {receipt?.phone || "N/A"}
+            </p>
+            <ul className="mb-4">
+              {cart.map((item) => (
+                <li key={item._id}>
+                  {item.name} x {item.qty} = $
+                  {Number(item.price) * Number(item.qty)}
+                </li>
+              ))}
+            </ul>
+            <p className="font-bold text-lg">
+              Total: ${receipt?.total || totalPrice.toFixed(2)}
+            </p>
+
+            <button
+              onClick={closeModal}
+              className="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </div>

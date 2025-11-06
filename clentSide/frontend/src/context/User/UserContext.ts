@@ -21,6 +21,7 @@ export interface UserContextType {
   setReload: React.Dispatch<React.SetStateAction<boolean>>;
   checkoutCart: (data: []) => Promise<unknown>;
   logout: () => Promise<unknown>;
+  receipt: unknown;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -40,6 +41,7 @@ const UserContext = createContext<UserContextType>({
   setReload: () => {},
   checkoutCart: async () => {},
   logout: async () => {},
+  receipt: {},
 });
 
 export default UserContext;

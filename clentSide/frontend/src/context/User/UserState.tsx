@@ -1,4 +1,3 @@
-// src/context/User/UserState.tsx
 import React, { useContext, useState, type ReactNode } from "react";
 import UserContext, { type UserContextType } from "./UserContext";
 import AuthContext, { type AuthData } from "../Auth/AuthContext";
@@ -9,11 +8,19 @@ import AlertContext from "../Alert/AlertContext";
 interface UserStateProps {
   children: ReactNode;
 }
-
+interface Receipt {
+  name: string;
+  phone: string;
+  total: number;
+}
 const UserState: React.FC<UserStateProps> = ({ children }) => {
   const { auth, setAuth } = useContext(AuthContext);
   const { showAlert } = useContext(AlertContext);
-
+  const [receipt, setReceipt] = useState<Receipt>({
+    name: "",
+    phone: "",
+    total: 0,
+  });
   const [limit, setLimit] = useState<number>(5);
   const [product, setProducts] = useState<any[]>([]);
   const [cart, setCart] = useState<any[]>([]);
@@ -84,7 +91,6 @@ const UserState: React.FC<UserStateProps> = ({ children }) => {
       );
       const data = response?.data?.data ?? [];
       setProducts(data);
-      // optional: showAlert("Products fetched", "success");
       return data;
     } catch (error: any) {
       if (!error?.response) showAlert("No response from the server", "danger");
@@ -104,7 +110,6 @@ const UserState: React.FC<UserStateProps> = ({ children }) => {
         price,
       });
 
-      // After adding, refresh cart
       await getCart();
       showAlert("Item added to cart", "success");
       return response?.data;
@@ -124,7 +129,6 @@ const UserState: React.FC<UserStateProps> = ({ children }) => {
       const response = await axiosPrivateInstance.delete(
         `/api/cart/delcart/${productId}`
       );
-      // refresh cart
       await getCart();
       showAlert("Item deleted successfully", "success");
       return response?.data;
@@ -142,8 +146,10 @@ const UserState: React.FC<UserStateProps> = ({ children }) => {
   const getCart = async () => {
     try {
       const response = await axiosPrivateInstance.get(`/api/cart/getcart`);
+      console.log(response);
       const data = response?.data?.data ?? [];
-      setCart(data); // <- **CRITICAL**: update context state
+      console.log(data);
+      setCart(data);
       return data;
     } catch (error: any) {
       if (!error?.response) showAlert("No response from the server", "danger");
@@ -163,8 +169,11 @@ const UserState: React.FC<UserStateProps> = ({ children }) => {
         cartItems: data,
       });
       console.log(response.data);
-
-      // Optionally clear cart or trigger reload
+      setReceipt({
+        name: response.data.deletedCount.name,
+        phone: response.data.deletedCount.phone,
+        total: response.data.deletedCount.total,
+      });
       setCart([]);
       setReload((prev) => !prev);
 
@@ -217,6 +226,7 @@ const UserState: React.FC<UserStateProps> = ({ children }) => {
     refresh: async () => {},
     checkoutCart,
     logout,
+    receipt,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
