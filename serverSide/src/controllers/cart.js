@@ -32,6 +32,7 @@ exports.addToCart = async (req, res) => {
 exports.deleteCart = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id);
     if (!id || id === undefined) {
       return res.status(400).json({
         success: false,
@@ -65,9 +66,10 @@ exports.getAllCart = async (req, res) => {
         data: getAll,
       });
     } else {
-      return res.status(400).json({
-        success: false,
+      return res.status(200).json({
+        success: true,
         message: "no carts found",
+        data: [],
       });
     }
   } catch (error) {
@@ -99,7 +101,7 @@ exports.checkout = async (req, res) => {
 
     console.log(total);
 
-    const createRecipt = Recipt.create({
+    const createRecipt = await Recipt.create({
       name: user.name,
       phone: user.phone,
       total: total,
@@ -110,7 +112,7 @@ exports.checkout = async (req, res) => {
         message: "could not create the user",
       });
     }
-
+    console.log(createRecipt);
     const result = await Cart.deleteMany({ userId: req.user.id });
     if (result) {
       return res.status(200).json({
