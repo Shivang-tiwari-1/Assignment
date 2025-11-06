@@ -53,9 +53,7 @@ Make sure MongoDB (if used) is running locally, or adjust DB_URI in .env.
 
 ### Signup Page
 
-### Signup Page
-
-![Signup Page](./screenshots/signup_page.png)
+![Signup Page](./screenshots/signuppage.png)
 _User enters name, phone, and password to create a new account. Upon successful signup, user is directed to login page._
 
 ### Login Page
