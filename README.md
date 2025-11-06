@@ -53,27 +53,29 @@ Make sure MongoDB (if used) is running locally, or adjust DB_URI in .env.
 
 ### Signup Page
 
-![Signup Page](ScreenShot\image.png)
-_User enters name, phone, and password to create a new account. Upon successful signup, user is directed to login page_
+### Signup Page
+
+![Signup Page](./screenshots/signup_page.png)
+_User enters name, phone, and password to create a new account. Upon successful signup, user is directed to login page._
 
 ### Login Page
 
-![Login Page](ScreenShot\loginpage.png)
+![Login Page](./screenshots/login_page.png)
 _User logs in with email and password. If "Remember Me" is checked, the login state is persistent across page refreshes or closing the browser. The app uses a refresh token mechanism to automatically generate a new access token when the old one expires, ensuring the user stays logged in without losing their session._
 
 ### Products Page
 
-![Products Page](ScreenShot\productpage.png)
+![Products Page](./screenshots/product_page.png)
 _Displays all available products with pagination. Users can navigate between pages, view product details, and add items to the cart._
 
 ### Cart Page
 
-![Cart Page](ScreenShot\cart.png)
+![Cart Page](./screenshots/cart_page.png)
 _Shows items added to the cart. Users can update quantity, remove items, view total price, and proceed to mock checkout._
 
 ### Receipt Page
 
-![Receipt Page](ScreenShot\recipt.png)
-_Demonstrates the mock checkout process. No real payments are processed; confirms cart purchase._
+![Receipt Page](./screenshots/receipt_page.png)
+_Demonstrates the mock checkout process. No real payments are processed
 
 [Watch the demo video](https://www.loom.com/share/14af6c8675ec43dab569647b16aef098)
