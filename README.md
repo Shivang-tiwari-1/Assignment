@@ -53,18 +53,23 @@ Make sure MongoDB (if used) is running locally, or adjust DB_URI in .env.
 
 ### Signup Page
 ![Signup Page](https://raw.githubusercontent.com/Shivang-tiwari-1/Assignment/main/ScreenShot/image.png)
+_User enters name, phone, and password to create a new account. Upon successful signup, user is directed to login page_
 
 ### Login Page
 ![Login Page](https://raw.githubusercontent.com/Shivang-tiwari-1/Assignment/main/ScreenShot/loginpage.png)
+_User logs in with email and password. If "Remember Me" is checked, the login state is persistent across page refreshes or closing the browser. The app uses a refresh token mechanism to automatically generate a new access token when the old one expires, ensuring the user stays logged in without losing their session._
 
 ### Products Page
 ![Products Page](https://raw.githubusercontent.com/Shivang-tiwari-1/Assignment/main/ScreenShot/productpage.png)
+_Displays all available products with pagination. Users can navigate between pages, view product details, and add items to the cart._
 
 ### Cart Page
 ![Cart Page](https://raw.githubusercontent.com/Shivang-tiwari-1/Assignment/main/ScreenShot/cart.png)
+_Shows items added to the cart. Users can update quantity, remove items, view total price, and proceed to mock checkout._
 
 ### Receipt Page
 ![Receipt Page](https://raw.githubusercontent.com/Shivang-tiwari-1/Assignment/main/ScreenShot/recipt.png)
+_Demonstrates the mock checkout process. No real payments are processed; confirms cart purchase._
 
 
 [Watch the demo video](https://www.loom.com/share/14af6c8675ec43dab569647b16aef098)
